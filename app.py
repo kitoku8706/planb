@@ -163,7 +163,7 @@ def preprocess_image(im: Image.Image, img_size=(224,224), preprocess=None):
     x = np.expand_dims(x, axis=0)
     return x
 
-def predict_image(model, preprocess, im: Image.Image, idx_to_class, threshold=0.75, topk=3):
+def predict_image(model, preprocess, im: Image.Image, idx_to_class, threshold=0.75, topk=5):
     x = preprocess_image(im, (224,224), preprocess)
     prob = model.predict(x, verbose=0)[0]  # (num_classes,)
     order = np.argsort(prob)[::-1]
