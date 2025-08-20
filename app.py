@@ -100,7 +100,7 @@ with st.sidebar:
     )
 
     thresh = st.slider("불확실 임계치(↓면 과감, ↑면 보수)", min_value=0.0, max_value=0.99, value=0.75, step=0.01)
-    topk = st.slider("Top-K 확률 표시", min_value=1, max_value=5, value=3, step=1)
+    topk = st.slider("Top-K 확률 표시", min_value=1, max_value=5, value=5, step=1)
 
     st.markdown("---")
     st.subheader("📂 폴더 일괄 예측 (선택)")
