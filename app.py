@@ -185,7 +185,7 @@ effective_labelmap_path = labelmap_path if (labelmap_path and os.path.exists(lab
 
 if effective_model_path is None:
     # 백본에 따라 파일명이 다를 수 있으나, 기본적으로 아래 이름으로 받는다
-    fallback_model_name = "hazard_resnet50_eye_new.keras" if backbone == "ResNet50" else "hazard_mobilenetv2.keras"
+    fallback_model_name = "hazard_resnet50_eye_6k.keras" if backbone == "ResNet50" else "hazard_mobilenetv2.keras"
     auto_model = ensure_file_via_gdown(f"./{fallback_model_name}", model_file_id)
     if auto_model:
         st.info(f"모델 자동 다운로드 완료: {auto_model}")
