@@ -69,7 +69,7 @@ def load_model_robust(path: str):
 
 # --------------- UI 기본 설정 ---------------
 st.set_page_config(page_title="Hazard Classifier UI", layout="wide")
-st.title("🔪 Hazard Classifier (awl / knife / scissor)")
+st.title("🔪 Hazard Classifier (10종)")
 st.caption("ResNet50 / MobileNetV2 모델 체크포인트로 예측 · 시각화 · 리포트")
 
 # --------------- 사이드바 설정 ---------------
