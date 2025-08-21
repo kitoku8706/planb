@@ -214,21 +214,57 @@ if idx_to_class is None and model is not None:
     st.warning("라벨맵이 없어 클래스 이름 매핑이 불완전할 수 있습니다. class_to_idx.json을 제공하는 것을 권장합니다.")
 
 # --------------- 단일 이미지 업로드 예측 ---------------
+# st.header("단일 이미지 예측")
+# uploaded_files = st.file_uploader("이미지 업로드 (여러 장 가능)", type=["jpg","jpeg","png","bmp","gif","webp"], accept_multiple_files=True)
+
+# if model and idx_to_class and uploaded_files:
+#     cols = st.columns(3)
+#     for i, uf in enumerate(uploaded_files):
+#         try:
+#             img = Image.open(io.BytesIO(uf.read())).convert("RGB")
+#             label, conf, top, _ = predict_image(model, preprocess, img, idx_to_class, threshold=thresh, topk=topk)
+#             with cols[i % 3]:
+#                 st.image(img, caption=f"{uf.name}", use_container_width=True)
+#                 st.markdown(f"**Pred:** `{label}`  |  **conf:** `{conf:.3f}`")
+#                 st.markdown("Top-{}:".format(topk))
+#                 for cls, p in top:
+#                     st.caption(f"- {cls}: {p:.3f}")
+#         except Exception as e:
+#             st.warning(f"{uf.name} 처리 실패: {e}")
+
 st.header("단일 이미지 예측")
-uploaded_files = st.file_uploader("이미지 업로드 (여러 장 가능)", type=["jpg","jpeg","png","bmp","gif","webp"], accept_multiple_files=True)
+
+uploaded_files = st.file_uploader(
+    "이미지 업로드 (여러 장 가능)", 
+    type=["jpg", "jpeg", "png", "bmp", "gif", "webp"], 
+    accept_multiple_files=True
+)
 
 if model and idx_to_class and uploaded_files:
     cols = st.columns(3)
     for i, uf in enumerate(uploaded_files):
         try:
+            # 이미지 로드
             img = Image.open(io.BytesIO(uf.read())).convert("RGB")
-            label, conf, top, _ = predict_image(model, preprocess, img, idx_to_class, threshold=thresh, topk=topk)
+            
+            # 예측 실행
+            label, conf, top, _ = predict_image(
+                model, preprocess, img, idx_to_class,
+                threshold=thresh, topk=topk
+            )
+            
+            # np.int64 방지용 형변환
+            label = str(label)
+            top = [(str(cls), float(p)) for cls, p in top]
+
+            # UI 표시
             with cols[i % 3]:
                 st.image(img, caption=f"{uf.name}", use_container_width=True)
                 st.markdown(f"**Pred:** `{label}`  |  **conf:** `{conf:.3f}`")
-                st.markdown("Top-{}:".format(topk))
+                st.markdown(f"Top-{topk}:")
                 for cls, p in top:
                     st.caption(f"- {cls}: {p:.3f}")
+
         except Exception as e:
             st.warning(f"{uf.name} 처리 실패: {e}")
 
