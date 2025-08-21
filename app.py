@@ -84,7 +84,7 @@ with st.sidebar:
     )
 
     # ✅ Streamlit 환경에서는 현재 작업 디렉토리 기준이 가장 안전
-    default_model = "./hazard_resnet50_eye_new.keras"
+    default_model = "./hazard_resnet50_eye_6k.keras"
     default_labelmap = "./class_to_idx.json"
     if backbone == "MobileNetV2":
         default_model = "./hazard_mobilenetv2.keras"
