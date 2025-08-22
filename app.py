@@ -255,6 +255,7 @@ if model and idx_to_class and uploaded_files:
             
             # np.int64 방지용 형변환
             label = str(label)
+            conf = float(conf)  # ← 여기 추가!
             top = [(str(cls), float(p)) for cls, p in top]
 
             # UI 표시
