@@ -100,7 +100,7 @@ with st.sidebar:
     )
 
     thresh = st.slider("불확실 임계치(↓면 과감, ↑면 보수)", min_value=0.0, max_value=0.99, value=0.75, step=0.01)
-    topk = st.slider("Top-K 확률 표시", min_value=1, max_value=10, value=10, step=1)
+    topk = st.slider("Top-K 확률 표시", min_value=1, max_value=5, value=5, step=1)
 
     st.markdown("---")
     st.subheader("📂 폴더 일괄 예측 (선택)")
@@ -163,7 +163,7 @@ def preprocess_image(im: Image.Image, img_size=(224,224), preprocess=None):
     x = np.expand_dims(x, axis=0)
     return x
 
-def predict_image(model, preprocess, im: Image.Image, idx_to_class, threshold=0.75, topk=10):
+def predict_image(model, preprocess, im: Image.Image, idx_to_class, threshold=0.75, topk=5):
     x = preprocess_image(im, (224,224), preprocess)
     prob = model.predict(x, verbose=0)[0]  # (num_classes,)
     order = np.argsort(prob)[::-1]
