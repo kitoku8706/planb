@@ -1,7 +1,12 @@
 {
   "awl": 0,
-  "gun": 1,
-  "knife": 2,
-  "phone": 3,
-  "scissors": 4
+  "axe": 1,
+  "bullet": 2,
+  "gun": 3,
+  "hammer": 4,
+  "knife": 5,
+  "phone": 6,
+  "scissors": 7,
+  "spanner": 8,
+  "usb": 9
 }
