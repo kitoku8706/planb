@@ -69,7 +69,7 @@ def load_model_robust(path: str):
 
 # --------------- UI 기본 설정 ---------------
 st.set_page_config(page_title="Hazard Classifier UI", layout="wide")
-st.title("🔪 Hazard Classifier (10종)")
+st.title("🔪 Hazard Classifier (awl / knife / scissor)")
 st.caption("ResNet50 / MobileNetV2 모델 체크포인트로 예측 · 시각화 · 리포트")
 
 # --------------- 사이드바 설정 ---------------
@@ -84,7 +84,7 @@ with st.sidebar:
     )
 
     # ✅ Streamlit 환경에서는 현재 작업 디렉토리 기준이 가장 안전
-    default_model = "./hazard_resnet50_eye_6k.keras"
+    default_model = "./hazard_resnet50_eye_new.keras"
     default_labelmap = "./class_to_idx.json"
     if backbone == "MobileNetV2":
         default_model = "./hazard_mobilenetv2.keras"
@@ -185,7 +185,7 @@ effective_labelmap_path = labelmap_path if (labelmap_path and os.path.exists(lab
 
 if effective_model_path is None:
     # 백본에 따라 파일명이 다를 수 있으나, 기본적으로 아래 이름으로 받는다
-    fallback_model_name = "hazard_resnet50_eye_6k.keras" if backbone == "ResNet50" else "hazard_mobilenetv2.keras"
+    fallback_model_name = "hazard_resnet50_eye_new.keras" if backbone == "ResNet50" else "hazard_mobilenetv2.keras"
     auto_model = ensure_file_via_gdown(f"./{fallback_model_name}", model_file_id)
     if auto_model:
         st.info(f"모델 자동 다운로드 완료: {auto_model}")
@@ -214,58 +214,21 @@ if idx_to_class is None and model is not None:
     st.warning("라벨맵이 없어 클래스 이름 매핑이 불완전할 수 있습니다. class_to_idx.json을 제공하는 것을 권장합니다.")
 
 # --------------- 단일 이미지 업로드 예측 ---------------
-# st.header("단일 이미지 예측")
-# uploaded_files = st.file_uploader("이미지 업로드 (여러 장 가능)", type=["jpg","jpeg","png","bmp","gif","webp"], accept_multiple_files=True)
-
-# if model and idx_to_class and uploaded_files:
-#     cols = st.columns(3)
-#     for i, uf in enumerate(uploaded_files):
-#         try:
-#             img = Image.open(io.BytesIO(uf.read())).convert("RGB")
-#             label, conf, top, _ = predict_image(model, preprocess, img, idx_to_class, threshold=thresh, topk=topk)
-#             with cols[i % 3]:
-#                 st.image(img, caption=f"{uf.name}", use_container_width=True)
-#                 st.markdown(f"**Pred:** `{label}`  |  **conf:** `{conf:.3f}`")
-#                 st.markdown("Top-{}:".format(topk))
-#                 for cls, p in top:
-#                     st.caption(f"- {cls}: {p:.3f}")
-#         except Exception as e:
-#             st.warning(f"{uf.name} 처리 실패: {e}")
-
 st.header("단일 이미지 예측")
-
-uploaded_files = st.file_uploader(
-    "이미지 업로드 (여러 장 가능)", 
-    type=["jpg", "jpeg", "png", "bmp", "gif", "webp"], 
-    accept_multiple_files=True
-)
+uploaded_files = st.file_uploader("이미지 업로드 (여러 장 가능)", type=["jpg","jpeg","png","bmp","gif","webp"], accept_multiple_files=True)
 
 if model and idx_to_class and uploaded_files:
     cols = st.columns(3)
     for i, uf in enumerate(uploaded_files):
         try:
-            # 이미지 로드
             img = Image.open(io.BytesIO(uf.read())).convert("RGB")
-            
-            # 예측 실행
-            label, conf, top, _ = predict_image(
-                model, preprocess, img, idx_to_class,
-                threshold=thresh, topk=topk
-            )
-            
-            # np.int64 방지용 형변환
-            label = str(label)
-            conf = float(conf)  # ← 여기 추가!
-            top = [(str(cls), float(p)) for cls, p in top]
-
-            # UI 표시
+            label, conf, top, _ = predict_image(model, preprocess, img, idx_to_class, threshold=thresh, topk=topk)
             with cols[i % 3]:
                 st.image(img, caption=f"{uf.name}", use_container_width=True)
                 st.markdown(f"**Pred:** `{label}`  |  **conf:** `{conf:.3f}`")
-                st.markdown(f"Top-{topk}:")
+                st.markdown("Top-{}:".format(topk))
                 for cls, p in top:
                     st.caption(f"- {cls}: {p:.3f}")
-
         except Exception as e:
             st.warning(f"{uf.name} 처리 실패: {e}")
 
